@@ -1,12 +1,39 @@
+#![warn(missing_docs, clippy::all)]
+
+#![doc = include_str!("../readme.md")]
+
+
+
+use std::borrow::Cow;
+
+
+
+/// Contains the implementation for unix builds, including Linux and Macos
 #[cfg(unix)]
 pub mod impl_unix;
-#[cfg(unix)]
-pub use impl_unix::*;
-
+/// Contains the implementation for windows builds
 #[cfg(windows)]
 pub mod impl_windows;
-#[cfg(windows)]
-pub use impl_windows::*;
+
+
+
+/// Allows converting an `OsString` or `OsStr` to a stable encoding
+pub trait ToStableEncoding {
+	/// Allows converting an `OsString` or `OsStr` to a stable encoding
+	fn to_stable_encoding(&self) -> Vec<u8>;
+}
+
+/// Allows converting an `OsString` to a stable encoding, bypassing data copies if possible
+pub trait IntoStableEncoding {
+	/// Allows converting an `OsString` to a stable encoding, bypassing data copies if possible
+	fn into_stable_encoding(self) -> Vec<u8>;
+}
+
+/// Allows converting an encoded string back into an `OsString`, bypassing data copies if possible
+pub trait FromStableEncoding {
+	/// Allows converting an encoded string back into an `OsString`, bypassing data copies if possible
+	fn from_stable_encoding<'a>(encoded: impl Into<Cow<'a, [u8]>>) -> Self;
+}
 
 
 
