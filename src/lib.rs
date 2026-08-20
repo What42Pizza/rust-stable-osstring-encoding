@@ -4,6 +4,11 @@
 
 
 
+#[cfg(not(any(unix, windows)))]
+compile_error!("This crate currently only supports Windows and Unix (Linux and Macos). Adding support for your platform is likely very easy, please consider opening an issue for it in \"stable-osstring-encoding\"'s issue tracker.");
+
+
+
 use std::borrow::Cow;
 
 
@@ -17,22 +22,34 @@ pub mod impl_windows;
 
 
 
-/// Allows converting an `OsString` or `OsStr` to a stable encoding
+/// Defines the encoding width
+#[cfg(unix)]
+pub type EncodingWidth = u8;
+/// Defines the encoding width
+#[cfg(windows)]
+pub type EncodingWidth = u16;
+
+/// A simple alias for `Vec<EncodingWidth>`
+pub type StableOsString = Vec<EncodingWidth>;
+
+
+
+/// Converts an `OsString` or `OsStr` to an encoding that is stable across rust compiler versions
 pub trait ToStableEncoding {
-	/// Allows converting an `OsString` or `OsStr` to a stable encoding
-	fn to_stable_encoding(&self) -> Vec<u8>;
+	/// Converts an `OsString` or `OsStr` to an encoding that is stable across rust compiler versions
+	fn to_stable_encoding(&self) -> StableOsString;
 }
 
-/// Allows converting an `OsString` to a stable encoding, bypassing data copies if possible
+/// Converts an `OsString` from an encoding that is stable across rust compiler versions, bypassing data copies if possible
 pub trait IntoStableEncoding {
-	/// Allows converting an `OsString` to a stable encoding, bypassing data copies if possible
-	fn into_stable_encoding(self) -> Vec<u8>;
+	/// Converts an `OsString` from an encoding that is stable across rust compiler versions, bypassing data copies if possible
+	fn into_stable_encoding(self) -> StableOsString;
 }
 
-/// Allows converting an encoded string back into an `OsString`, bypassing data copies if possible
+/// Converts an `OsString` from an encoding that is stable across rust compiler versions, bypassing data copies if possible
 pub trait FromStableEncoding {
-	/// Allows converting an encoded string back into an `OsString`, bypassing data copies if possible
-	fn from_stable_encoding<'a>(encoded: impl Into<Cow<'a, [u8]>>) -> Self;
+	/// Converts an `OsString` from an encoding that is stable across rust compiler versions, bypassing data copies if possible
+	fn from_stable_encoding<'a>(encoded: impl Into<Cow<'a, [EncodingWidth]>>) -> Self;
 }
 
 
@@ -44,14 +61,21 @@ mod test {
 	
 	#[test]
 	fn basics() {
+		
 		let start = OsString::from("test");
 		let as_stable_1 = start.to_stable_encoding();
 		let as_stable_2 = start.into_stable_encoding();
 		assert_eq!(as_stable_1, as_stable_2);
-		let as_stable = &*as_stable_2; // make sure &[u8] can be given to from_stable_encoding()
-		let as_os_string = OsString::from_stable_encoding(as_stable);
-		let as_str = as_os_string.to_str();
+		
+		let as_stable_1 = &*as_stable_1; // make sure &[EncodingWidth] can be given to from_stable_encoding()
+		
+		let as_os_string_1 = OsString::from_stable_encoding(as_stable_1);
+		let as_os_string_2 = OsString::from_stable_encoding(as_stable_2);
+		assert_eq!(as_os_string_1, as_os_string_2);
+		
+		let as_str = as_os_string_1.to_str();
 		assert_eq!(as_str, Some("test"));
+		
 	}
 	
 }
