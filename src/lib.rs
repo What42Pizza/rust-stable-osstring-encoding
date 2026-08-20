@@ -54,7 +54,7 @@ pub trait IntoStableEncoding {
 /// Crates an `OsString` from an encoding that is stable across rust compiler versions, bypassing data copies if possible
 pub trait FromStableEncoding {
 	/// Converts an `OsString` from an encoding that is stable across rust compiler versions, bypassing data copies if possible
-	/// 
+	///
 	/// This takes `Into<Cow<[EncodingWidth]>>` so that either a slice can be passed (which always allocates and copies data) or a vec can be passed (which might be able to skip allocating and copying data)
 	///
 	/// # Safety
