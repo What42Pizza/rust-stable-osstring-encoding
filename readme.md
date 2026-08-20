@@ -10,12 +10,15 @@ This was made for one very specific reason: the encoding of `OsStr::as_encoded_b
 ## Example:
 
 ```rust
-# use std::ffi::OsString;
-# use stable_osstring_encoding::*;
+use std::ffi::OsString;
+use stable_osstring_encoding::*;
+
 let my_string = OsString::from("My String");
 let stable_string: Vec<_> = my_string.into_stable_encoding();
 // send stable_string to another program
-let my_string = OsString::from_stable_encoding(stable_string);
+
+// in another program:
+let my_string = unsafe { OsString::from_stable_encoding(stable_string) };
 ```
 
 ### Provided methods:

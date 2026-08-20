@@ -29,7 +29,7 @@ impl IntoStableEncoding for OsString {
 
 
 impl FromStableEncoding for OsString {
-	fn from_stable_encoding<'a>(encoded: impl Into<Cow<'a, [EncodingWidth]>>) -> Self {
+	unsafe fn from_stable_encoding<'a>(encoded: impl Into<Cow<'a, [EncodingWidth]>>) -> Self {
 		OsString::from_vec(encoded.into().into_owned())
 	}
 }

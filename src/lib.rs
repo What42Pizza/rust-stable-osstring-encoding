@@ -50,7 +50,11 @@ pub trait IntoStableEncoding {
 /// Converts an `OsString` from an encoding that is stable across rust compiler versions, bypassing data copies if possible
 pub trait FromStableEncoding {
 	/// Converts an `OsString` from an encoding that is stable across rust compiler versions, bypassing data copies if possible
-	fn from_stable_encoding<'a>(encoded: impl Into<Cow<'a, [EncodingWidth]>>) -> Self;
+	///
+	/// # Safety
+	///
+	/// The given bytes must be compatible with the underlying of the platform's `OsStr` encoding (reminder: this crate only make it safe to pass data between different rust versions)
+	unsafe fn from_stable_encoding<'a>(encoded: impl Into<Cow<'a, [EncodingWidth]>>) -> Self;
 }
 
 
@@ -69,8 +73,8 @@ mod test {
 
 		let as_stable_1 = &*as_stable_1; // make sure &[EncodingWidth] can be given to from_stable_encoding()
 
-		let as_os_string_1 = OsString::from_stable_encoding(as_stable_1);
-		let as_os_string_2 = OsString::from_stable_encoding(as_stable_2);
+		let as_os_string_1 = unsafe { OsString::from_stable_encoding(as_stable_1) };
+		let as_os_string_2 = unsafe { OsString::from_stable_encoding(as_stable_2) };
 		assert_eq!(as_os_string_1, as_os_string_2);
 
 		let as_str = as_os_string_1.to_str();
