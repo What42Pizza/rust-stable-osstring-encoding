@@ -10,7 +10,7 @@ compile_error!(
 
 
 
-use std::borrow::Cow;
+use std::{borrow::Cow, ffi::OsStr};
 
 
 
@@ -55,6 +55,17 @@ pub trait FromStableEncoding {
 	///
 	/// The given bytes must be compatible with the underlying of the platform's `OsStr` encoding (reminder: this crate only make it safe to pass data between different rust versions)
 	unsafe fn from_stable_encoding<'a>(encoded: impl Into<Cow<'a, [EncodingWidth]>>) -> Self;
+}
+
+
+
+impl<'a> IntoStableEncoding for Cow<'a, OsStr> {
+	fn into_stable_encoding(self) -> StableOsString {
+		match self {
+			Cow::Borrowed(os_str) => os_str.to_stable_encoding(),
+			Cow::Owned(os_string) => os_string.into_stable_encoding(),
+		}
+	}
 }
 
 

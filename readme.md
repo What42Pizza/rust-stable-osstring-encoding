@@ -27,6 +27,8 @@ let my_string = unsafe { OsString::from_stable_encoding(stable_string) };
 // note: `StableOsString` is just an alias for `Vec<u8>` or `Vec<u16>` (depending on the platform)
 OsStr::to_stable_encoding(&self) -> StableOsString
 OsString::to_stable_encoding(&self) -> StableOsString
+// into_stable_encoding() avoids memory copies whenever possible
 OsString::into_stable_encoding(self) -> StableOsString
+Cow<OsStr>::into_stable_encoding(self) -> StableOsString
 OsString::from_stable_encoding(encoded: Into<Cow<[EncodingWidth]>>) -> OsString
 ```

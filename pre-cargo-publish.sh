@@ -3,7 +3,7 @@
 echo "======== tests ========"
 cargo test
 echo "======== formatting ========"
-cargo fmt --check
+cargo fmt
 echo "======== clippy ========"
 cargo clippy --all-targets --all-features -- -D warnings
 echo "======== doc ========"
