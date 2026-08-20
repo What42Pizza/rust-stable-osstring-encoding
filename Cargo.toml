@@ -2,7 +2,7 @@
 name = "stable-osstring-encoding"
 version = "1.0.0"
 edition = "2024"
-license = "CC0"
+license = "CC0-1.0"
 description = "A stable way to convert OsString and OsStr to and from raw data."
 repository = "https://github.com/What42Pizza/rust-stable-osstring-encoding"
 readme = "readme.md"
