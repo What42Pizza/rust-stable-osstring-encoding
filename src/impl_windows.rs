@@ -1,5 +1,5 @@
 use crate::*;
-use std::{ffi::{OsStr, OsString}, os::windows::ffi::{OsStrExt, OsStringExt}, slice};
+use std::{ffi::{OsStr, OsString}, os::windows::ffi::{OsStrExt, OsStringExt}};
 
 
 
@@ -27,8 +27,6 @@ impl IntoStableEncoding for OsString {
 
 impl FromStableEncoding for OsString {
 	fn from_stable_encoding<'a>(encoded: impl Into<Cow<'a, [EncodingWidth]>>) -> Self {
-		let encoded = encoded.into();
-		let encoded = &*encoded;
-		OsString::from_wide(encoded)
+		OsString::from_wide(&encoded.into())
 	}
 }
