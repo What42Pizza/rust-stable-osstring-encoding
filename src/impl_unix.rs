@@ -1,5 +1,8 @@
 use crate::*;
-use std::{ffi::{OsStr, OsString}, os::unix::ffi::{OsStrExt, OsStringExt}};
+use std::{
+	ffi::{OsStr, OsString},
+	os::unix::ffi::{OsStrExt, OsStringExt},
+};
 
 
 

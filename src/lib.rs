@@ -1,11 +1,12 @@
 #![warn(missing_docs, clippy::all)]
-
 #![doc = include_str!("../readme.md")]
 
 
 
 #[cfg(not(any(unix, windows)))]
-compile_error!("This crate currently only supports Windows and Unix (Linux and Macos). Adding support for your platform is likely very easy, please consider opening an issue for it in \"stable-osstring-encoding\"'s issue tracker.");
+compile_error!(
+	"This crate currently only supports Windows and Unix (Linux and Macos). Adding support for your platform is likely very easy, please consider opening an issue for it in \"stable-osstring-encoding\"'s issue tracker."
+);
 
 
 
@@ -56,26 +57,23 @@ pub trait FromStableEncoding {
 
 #[cfg(test)]
 mod test {
-	use std::ffi::OsString;
 	use crate::{FromStableEncoding, IntoStableEncoding, ToStableEncoding};
-	
+	use std::ffi::OsString;
+
 	#[test]
 	fn basics() {
-		
 		let start = OsString::from("test");
 		let as_stable_1 = start.to_stable_encoding();
 		let as_stable_2 = start.into_stable_encoding();
 		assert_eq!(as_stable_1, as_stable_2);
-		
+
 		let as_stable_1 = &*as_stable_1; // make sure &[EncodingWidth] can be given to from_stable_encoding()
-		
+
 		let as_os_string_1 = OsString::from_stable_encoding(as_stable_1);
 		let as_os_string_2 = OsString::from_stable_encoding(as_stable_2);
 		assert_eq!(as_os_string_1, as_os_string_2);
-		
+
 		let as_str = as_os_string_1.to_str();
 		assert_eq!(as_str, Some("test"));
-		
 	}
-	
 }

@@ -8,5 +8,3 @@ repository = "https://github.com/What42Pizza/rust-stable-osstring-encoding"
 readme = "readme.md"
 keywords = ["ffi", "osstring", "stable", "abi"]
 categories = ["encoding", "data-structures"]
-
-[dependencies]

@@ -1,0 +1,2 @@
+- v1.0.0 (26/08/19)
+  - Initial release
